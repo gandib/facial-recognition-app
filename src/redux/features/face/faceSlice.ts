@@ -32,8 +32,12 @@ const faceSlice = createSlice({
     setFaces: (state, action: PayloadAction<FaceData[]>) => {
       state.faces = action.payload;
     },
+    setWebcamOn: (state, action) => {
+      state.webcamOn = action.payload;
+    },
   },
 });
 
-export const { setWebcamStatus, setLoading, setFaces } = faceSlice.actions;
+export const { setWebcamStatus, setLoading, setFaces, setWebcamOn } =
+  faceSlice.actions;
 export default faceSlice.reducer;

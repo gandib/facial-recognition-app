@@ -1,34 +1,60 @@
 import React, { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { setWebcamStatus } from "../redux/features/face/faceSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { setWebcamOn } from "../redux/features/face/faceSlice";
 
 const WebcamFeed: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const dispatch = useDispatch();
+  const webcamOn = useSelector((state: RootState) => state.face.webcamOn);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  const startWebcam = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      }
+      streamRef.current = stream;
+      dispatch(setWebcamOn(true));
+    } catch (err) {
+      console.error("Error accessing webcam:", err);
+    }
+  };
+
+  const stopWebcam = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.srcObject = null;
+    }
+    dispatch(setWebcamOn(false));
+  };
 
   useEffect(() => {
-    const enableWebcam = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-        }
-        dispatch(setWebcamStatus(true));
-      } catch (err) {
-        console.error("Webcam error:", err);
-        alert("Please allow access to your webcam to continue.");
-        dispatch(setWebcamStatus(false));
-      }
+    return () => {
+      stopWebcam();
     };
-    enableWebcam();
-  }, [dispatch]);
+  }, []);
 
   return (
-    <div className="position-relative">
-      <video ref={videoRef} width="640" height="480" className="img-fluid" />
+    <div className="relative">
+      <video ref={videoRef} width="640" height="480" className="rounded" />
+      <div className="mt-2 flex gap-2">
+        {!webcamOn ? (
+          <button onClick={startWebcam} className="px-4 py-2 btn btn-primary">
+            Start Webcam
+          </button>
+        ) : (
+          <button onClick={stopWebcam} className="px-4 py-2 btn btn-secondary">
+            Stop Webcam
+          </button>
+        )}
+      </div>
     </div>
   );
 };
