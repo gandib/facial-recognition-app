@@ -30,7 +30,7 @@ export const detectFaces = async (
   return detections.map((d) => ({
     age: d.age,
     gender: d.gender,
-    expressions: Object.fromEntries(Object.entries(d.expressions)), // Ensure plain object
+    expressions: Object.fromEntries(Object.entries(d.expressions)),
     box: {
       x: d.detection.box.x,
       y: d.detection.box.y,
