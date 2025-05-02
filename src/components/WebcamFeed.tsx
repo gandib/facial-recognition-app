@@ -42,8 +42,8 @@ const WebcamFeed: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative">
-      <video ref={videoRef} width="640" height="480" className="rounded" />
+    <div className="position-relative w-100">
+      <video ref={videoRef} className="img-fluid rounded border w-100" />
       <div className="mt-2 flex gap-2">
         {!webcamOn ? (
           <button onClick={startWebcam} className="px-4 py-2 btn btn-primary">
