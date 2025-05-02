@@ -19,7 +19,7 @@ export const detectFaces = async (video: HTMLVideoElement) => {
   return detections.map((d) => ({
     age: d.age,
     gender: d.gender,
-    expressions: d.expressions,
+    expressions: d.expressions as unknown as Record<string, number>,
     box: d.detection.box,
   }));
 };
