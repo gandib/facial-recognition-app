@@ -8,13 +8,15 @@ const FaceCanvas: React.FC = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const video = document.querySelector("video") as HTMLVideoElement;
+    if (!canvas || !video) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Adjust canvas size to match the container/image/video
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    // Sync canvas size with video dimensions
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -23,7 +25,7 @@ const FaceCanvas: React.FC = () => {
       ctx.lineWidth = 2;
       ctx.strokeRect(box.x, box.y, box.width, box.height);
 
-      ctx.font = "18px Arial";
+      ctx.font = "20px Arial";
       const emotion = Object.entries(expressions).sort(
         (a, b) => b[1] - a[1]
       )[0][0];
@@ -31,12 +33,10 @@ const FaceCanvas: React.FC = () => {
         1
       )}, Gender: ${gender}, Emotion: ${emotion}`;
 
-      // Measure text for background box
       const textWidth = ctx.measureText(label).width;
-      const textHeight = 16; // Rough height of the text
+      const textHeight = 16;
       const padding = 4;
 
-      // Draw semi-transparent background
       ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
       ctx.fillRect(
         box.x - padding,
@@ -45,7 +45,6 @@ const FaceCanvas: React.FC = () => {
         textHeight + padding * 2
       );
 
-      // Draw text on top of the background
       ctx.fillStyle = "yellow";
       ctx.fillText(label, box.x, box.y - 10);
     });
@@ -54,8 +53,12 @@ const FaceCanvas: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="position-absolute top-0 start-0 w-100 h-100"
-      style={{ pointerEvents: "none" }}
+      className="position-absolute top-0 start-0"
+      style={{
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+      }}
     />
   );
 };
