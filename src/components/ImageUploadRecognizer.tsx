@@ -23,7 +23,7 @@ const ImageUploadRecognizer: React.FC = () => {
     setTimeout(() => handleFaceDetection(url), 100);
   };
 
-  const handleFaceDetection = async (url: string) => {
+  const handleFaceDetection = async (_url: string) => {
     if (!imageRef.current) return;
 
     const detections = await faceapi
