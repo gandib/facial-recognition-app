@@ -16,15 +16,20 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    loadModels();
-    const interval = setInterval(async () => {
-      const video = document.querySelector("video");
-      if (video) {
-        const results = await detectFaces(video);
-        dispatch(setFaces(results));
-      }
-    }, 1000);
-    return () => clearInterval(interval);
+    const setup = async () => {
+      await loadModels();
+      const interval = setInterval(async () => {
+        const video = document.querySelector("video");
+        if (video && !video.paused && !video.ended) {
+          const results = await detectFaces(video);
+          dispatch(setFaces(results));
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    };
+
+    setup();
   }, [dispatch]);
 
   return (

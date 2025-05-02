@@ -5,7 +5,7 @@ import { RootState } from "../redux/store";
 const FaceCanvas: React.FC = () => {
   const faces = useSelector((state: RootState) => state.face.faces);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
+  console.log(faces);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;

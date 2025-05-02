@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface FaceData {
+export interface FaceData {
   age: number;
   gender: string;
   expressions: Record<string, number>;

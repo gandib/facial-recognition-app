@@ -18,7 +18,8 @@ const WebcamFeed: React.FC = () => {
         }
         dispatch(setWebcamStatus(true));
       } catch (err) {
-        console.error("Error accessing webcam:", err);
+        console.error("Webcam error:", err);
+        alert("Please allow access to your webcam to continue.");
         dispatch(setWebcamStatus(false));
       }
     };
